@@ -1,34 +1,32 @@
 local createDepot = peripheral.find("create:depot")
 local chestOutput = peripheral.find("minecraft:chest")
 
-local itemName = "kubejs:invar_compound"
+-- name of invar compound ingot from kubejs
+local itemInvarCompound = "kubejs:invar_compound"
+-- name of invar ingot
 local itemInvarIngot = "thermal:invar_ingot"
 
-function checkInvarAndSuck() 
+-- EASY WAY TO HANDLE INVAR FILTER CHECKER
+function checkInvarAndFilterToChest() 
     local item = createDepot.getItemDetail(1)
     if not item then 
-        print("Aguardando algum item..")
+        print("WAITING ANY ITENS")
         return
     end
-    if item.name == itemName then
-        print("Aguardando o processo do invar")
+    if item.name == itemInvarCompound then
+        print("WAITING INVAR PROCESSING")
     elseif item.name == itemInvarIngot then
-        print("Pegando invar.")
-        pushInvarToNearChest()
+        print("PUSH INVAR TO NEAR CHEST")
+        createDepot.pushItems(peripheral.getName(chestOutput), 1)
     else 
-        print("Item nao reconhecido. Vou obter para nao atrapalhar.")
+        print("REMOVING WRONG ITEM FROM Create depot inventory.")
         turtle.suck()
     end
     print(("%s (%s)"):format(item.name))
     sleep(1)
 end
 
-function pushInvarToNearChest()
-    createDepot.pushItems(peripheral.getName(chestOutput), 1)
-end
-
 while true do
-    print("rodando..")
-    checkInvarAndSuck()
+    checkInvarAndFilterToChest()
     sleep(1)
 end
